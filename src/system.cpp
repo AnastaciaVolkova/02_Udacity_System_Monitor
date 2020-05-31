@@ -1,6 +1,7 @@
 #include <unistd.h>
 #include <cstddef>
 #include <fstream>
+#include <iterator>
 #include <set>
 #include <sstream>
 #include <string>
@@ -22,8 +23,18 @@ Processor& System::Cpu() { return cpu_; }
 // TODO: Return a container composed of the system's processes
 vector<Process>& System::Processes() { return processes_; }
 
-// TODO: Return the system's kernel identifier (string)
-std::string System::Kernel() { return string(); }
+// DONE: Return the system's kernel identifier (string)
+std::string System::Kernel() {
+  ifstream ifs("/proc/version");
+  string line;
+  getline(ifs, line);
+  ifs.close();
+  istringstream iss(line);
+  vector<string> tokens(istream_iterator<string>{iss},
+                        istream_iterator<string>());
+
+  return tokens[2];
+}
 
 // TODO: Return the system's memory utilization
 float System::MemoryUtilization() { return 0.0; }
