@@ -23,10 +23,10 @@ enum class FieldsNames : int {
   quest_nice
 };
 
-// TODO: Return the aggregate CPU utilization
+// DONE: Return the aggregate CPU utilization
 float Processor::Utilization() {
   float idle = 0, non_idle = 0;
-  for (int i = 0; i < 2; i++) {
+  for (int i = 0; i < window_size; i++) {
     ifstream ifs("/proc/stat");
     string line;
     // Read the line which aggregates the numbers in all of the other "cpuN"
@@ -70,7 +70,7 @@ float Processor::Utilization() {
     this_thread::sleep_for(chrono::milliseconds(1));
   }
   // Get average of CPU usage parameters.
-  idle /= 2.0;
-  non_idle /= 2.0;
+  idle /= window_size;
+  non_idle /= window_size;
   return non_idle / (idle + non_idle);
 }
