@@ -2,6 +2,7 @@
 #include <cstddef>
 #include <fstream>
 #include <iterator>
+#include <regex>
 #include <set>
 #include <sstream>
 #include <string>
@@ -36,8 +37,24 @@ std::string System::Kernel() {
   return tokens[2];
 }
 
-// TODO: Return the system's memory utilization
-float System::MemoryUtilization() { return 0.0; }
+// DONE: Return the system's memory utilization
+float System::MemoryUtilization() {
+  ifstream ifs("/proc/meminfo");
+  string line;
+  float mem_total, mem_free;
+  regex rx("(^[a-z,A-Z]+): +([0-9]+)");
+  for (int i = 0; i < 2; i++) {
+    getline(ifs, line);
+    smatch sm;
+    regex_search(line, sm, rx);
+    string key = sm.str(1);
+    string value = sm.str(2);
+    if (key == "MemTotal") mem_total = stof(value);
+    if (key == "MemFree") mem_free = stof(value);
+  }
+  ifs.close();
+  return mem_total - mem_free;
+}
 
 // DONE: Return the operating system name
 std::string System::OperatingSystem() {
