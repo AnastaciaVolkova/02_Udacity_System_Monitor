@@ -1,0 +1,4 @@
+feat: Realize LinuxParser::RunningProcesses
+
+Create method LinuxParser::ProcStat for reading /proc/stat
+
