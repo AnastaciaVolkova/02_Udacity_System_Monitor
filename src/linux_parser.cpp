@@ -1,15 +1,35 @@
 #include <dirent.h>
 #include <unistd.h>
+#include <iomanip>
 #include <iostream>
+#include <regex>
 #include <string>
 #include <vector>
 
 #include "linux_parser.h"
 
+using std::regex;
+using std::smatch;
 using std::stof;
 using std::string;
 using std::to_string;
 using std::vector;
+
+string LinuxParser::ProcStatus(int id, string target_key) {
+  std::ifstream ifs(kProcDirectory + to_string(id) + kStatusFilename);
+  string key = "", val = "", line;
+  regex pat("([a-z,A-Z]+):[\t, ]+([0-9]+).+");
+  smatch sm;
+  getline(ifs, line);
+  do {
+    if (regex_match(line, sm, pat)) {
+      key = sm[1].str();
+      val = sm[2].str();
+    }
+  } while (getline(ifs, line) && (key != target_key));
+  ifs.close();
+  return val;
+}
 
 // DONE: An example of how to read data from the filesystem
 string LinuxParser::OperatingSystem() {
@@ -104,9 +124,13 @@ string LinuxParser::Command(int pid) {
   return line;
 }
 
-// TODO: Read and return the memory used by a process
-// REMOVE: [[maybe_unused]] once you define the function
-string LinuxParser::Ram(int pid[[maybe_unused]]) { return string(); }
+string LinuxParser::Ram(int pid) {
+  string val = ProcStatus(pid, "VmSize");
+  float v = stol(val) / 1024.0;
+  std::ostringstream oss;
+  oss << std::fixed << std::setprecision(3) << v;
+  return oss.str();
+}
 
 // TODO: Read and return the user ID associated with a process
 // REMOVE: [[maybe_unused]] once you define the function

@@ -26,6 +26,9 @@ int TotalProcesses();
 int RunningProcesses();
 std::string OperatingSystem();
 std::string Kernel();
+std::string ProcStatus(
+    int id,
+    std::string target_key);  // Extract information from /proc/[id]/status/
 
 // CPU
 enum CPUStates {
