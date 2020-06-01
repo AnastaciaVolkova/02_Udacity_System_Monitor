@@ -94,23 +94,10 @@ float Process::CpuUtilization() {
 }
 
 // DONE : Return the command that generated this process
-string Process::Command() {
-  // Read fields of /proc/[pid]/cmdline.
-  ifstream ifs(string("/proc/") + to_string(id_) + string("/cmdline"));
-  string line;
-  getline(ifs, line);
-  return LinuxParser::Command(id_);
-}
+string Process::Command() { return LinuxParser::Command(id_); }
 
-#include <iostream>
 // DONE: Return this process's memory utilization
-string Process::Ram() {
-  string val = ReadProcStatus("VmSize");
-  float v = stol(val) / 1024.0;
-  ostringstream oss;
-  oss << std::fixed << std::setprecision(3) << v;
-  return oss.str();
-}
+string Process::Ram() { LinuxParser::Ram(); }
 
 // DONE: Return the user (name) that generated this process
 string Process::User() {
