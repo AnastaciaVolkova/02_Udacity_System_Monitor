@@ -7,7 +7,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
-
+#include "linux_parser.h"
 #include "process.h"
 
 using std::ifstream;
@@ -99,7 +99,7 @@ string Process::Command() {
   ifstream ifs(string("/proc/") + to_string(id_) + string("/cmdline"));
   string line;
   getline(ifs, line);
-  return line;
+  return LinuxParser::Command(id_);
 }
 
 #include <iostream>
