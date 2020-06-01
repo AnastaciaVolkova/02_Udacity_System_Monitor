@@ -21,22 +21,6 @@ using std::string;
 using std::to_string;
 using std::vector;
 
-string Process::ReadProcStatus(string target_key) {
-  ifstream ifs(string("/proc/") + to_string(id_) + string("/status"));
-  string key = "", val = "", line;
-  regex pat("([a-z,A-Z]+):[\t, ]+([0-9]+).+");
-  smatch sm;
-  getline(ifs, line);
-  do {
-    if (regex_match(line, sm, pat)) {
-      key = sm[1].str();
-      val = sm[2].str();
-    }
-  } while (getline(ifs, line) && (key != target_key));
-  ifs.close();
-  return val;
-}
-
 int Process::Pid() { return id_; }
 
 enum class ProcIdStat : int {
