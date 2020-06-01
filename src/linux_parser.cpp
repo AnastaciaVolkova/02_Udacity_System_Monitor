@@ -188,7 +188,7 @@ string LinuxParser::User(int pid) {
 // DONE: Read and return the uptime of a process
 long LinuxParser::UpTime(int pid) {
   // Get number of clock ticks per second.
-  float herz = static_cast<float>(sysconf(_SC_CLK_TCK));
+  float herz = static_cast<float>(Jiffies());
 
   // Get starttime field from /proc/[id]/stat.
   string line;
