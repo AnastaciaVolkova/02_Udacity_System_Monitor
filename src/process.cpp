@@ -99,6 +99,7 @@ string Process::Ram() {
       val = sm[2].str();
     }
   } while (getline(ifs, line) && (key != "VmSize"));
+  ifs.close();
   float v = stol(val) / 1024.0;
   ostringstream oss;
   oss << std::fixed << std::setprecision(3) << v;
