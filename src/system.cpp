@@ -99,12 +99,4 @@ int System::RunningProcesses() { return ReadProcStat("procs_running"); }
 int System::TotalProcesses() { return ReadProcStat("processes"); }
 
 // DONE: Return the number of seconds since the system started running
-long int System::UpTime() {
-  ifstream ifs("/proc/uptime");
-  string line;
-  // Get uptime.
-  getline(ifs, line, ' ');
-  float x = floor(stof(line));
-  ifs.close();
-  return static_cast<long int>(x);
-}
+long int System::UpTime() { return LinuxParser::UpTime(); }

@@ -1,5 +1,6 @@
 #include <dirent.h>
 #include <unistd.h>
+#include <cmath>
 #include <iomanip>
 #include <iostream>
 #include <regex>
@@ -109,7 +110,15 @@ float LinuxParser::MemoryUtilization() {
 }
 
 // TODO: Read and return the system uptime
-long LinuxParser::UpTime() { return 0; }
+long LinuxParser::UpTime() {
+  std::ifstream ifs(kProcDirectory + kUptimeFilename);
+  string line;
+  // Get uptime.
+  std::getline(ifs, line, ' ');
+  float x = floor(stof(line));
+  ifs.close();
+  return static_cast<long int>(x);
+}
 
 // TODO: Read and return the number of jiffies for the system
 long LinuxParser::Jiffies() { return 0; }
