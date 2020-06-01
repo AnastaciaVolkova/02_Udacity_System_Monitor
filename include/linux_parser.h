@@ -43,6 +43,15 @@ enum CPUStates {
   kGuest_,
   kGuestNice_
 };
+
+enum class ProcIdStat : int {
+  utime = 13,
+  stime,
+  cutime,
+  cstime,
+  starttime = 23
+};
+
 float MemoryUtilazation();
 float CpuUtilization();
 long Jiffies();

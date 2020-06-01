@@ -87,35 +87,7 @@ string Process::Ram() { return LinuxParser::Ram(id_); }
 string Process::User() { return LinuxParser::User(id_); }
 
 // DONE: Return the age of this process (in seconds)
-long int Process::UpTime() {
-  // Get number of clock ticks per second.
-  float herz = static_cast<float>(sysconf(_SC_CLK_TCK));
-
-  // Get starttime field from /proc/[id]/stat.
-  string line;
-  ifstream ifs(string("/proc/") + to_string(id_) + "/stat");
-  getline(ifs, line);
-  ifs.close();
-  istringstream iss(line);
-  vector<string> tokens(istream_iterator<string>{iss},
-                        istream_iterator<string>());
-
-  // Get uptime of the system.
-  ifs.open("/proc/uptime");
-  getline(ifs, line, ' ');
-  ifs.close();
-  float uptime = static_cast<float>(stol(line));  // Uptime of system (seconds).
-
-  // Find out when process starts after system boots (seconds).
-  float starttime = static_cast<float>(
-                        stol(tokens[static_cast<int>(ProcIdStat::starttime)])) /
-                    herz;
-
-  // Find how much process works.
-  float seconds = uptime - starttime;
-
-  return seconds;
-}
+long int Process::UpTime() { return LinuxParser::UpTime(id_); }
 
 // DONE: Overload the "less than" comparison operator for Process objects
 bool Process::operator<(Process const& a) const {

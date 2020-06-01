@@ -176,6 +176,32 @@ string LinuxParser::User(int pid) {
   return name;
 }
 
-// TODO: Read and return the uptime of a process
-// REMOVE: [[maybe_unused]] once you define the function
-long LinuxParser::UpTime(int pid[[maybe_unused]]) { return 0; }
+// DONE: Read and return the uptime of a process
+long LinuxParser::UpTime(int pid) {
+  // Get number of clock ticks per second.
+  float herz = static_cast<float>(sysconf(_SC_CLK_TCK));
+
+  // Get starttime field from /proc/[id]/stat.
+  string line;
+  std::ifstream ifs(kProcDirectory + to_string(pid) + kStatFilename);
+  getline(ifs, line);
+  ifs.close();
+  std::istringstream iss(line);
+  vector<string> tokens(std::istream_iterator<string>{iss},
+                        std::istream_iterator<string>());
+
+  // Get uptime of the system from /proc/uptime.
+  ifs.open(kProcDirectory + kUptimeFilename);
+  getline(ifs, line, ' ');
+  ifs.close();
+  float uptime = static_cast<float>(stol(line));  // Uptime of system (seconds).
+
+  // Find out when process starts after system boots (seconds).
+  float starttime = static_cast<float>(std::stol(
+                        tokens[static_cast<int>(ProcIdStat::starttime)])) /
+                    herz;
+
+  // Find how much process works.
+  float seconds = uptime - starttime;
+  return seconds;
+}
