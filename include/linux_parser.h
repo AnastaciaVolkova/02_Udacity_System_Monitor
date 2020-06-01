@@ -30,6 +30,9 @@ std::string ProcStatus(
     int id,
     std::string target_key);  // Extract information from /proc/[id]/status/
 
+// Read information from /proc/stat
+std::string ProcStat(std::string target_key);
+
 // CPU
 enum CPUStates {
   kUser_ = 0,

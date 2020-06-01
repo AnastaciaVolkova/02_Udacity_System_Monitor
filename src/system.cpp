@@ -93,7 +93,7 @@ int System::ReadProcStat(string target_key) {
 }
 
 // DONE: Return the number of processes actively running on the system
-int System::RunningProcesses() { return ReadProcStat("procs_running"); }
+int System::RunningProcesses() { return LinuxParser::RunningProcesses(); }
 
 // DONE: Return the total number of processes on the system
 int System::TotalProcesses() { return ReadProcStat("processes"); }

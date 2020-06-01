@@ -32,6 +32,20 @@ string LinuxParser::ProcStatus(int id, string target_key) {
   return val;
 }
 
+string LinuxParser::ProcStat(string target_key) {
+  string line;
+  std::ifstream ifs(kProcDirectory + kStatFilename);
+  // Search for target_key.
+  string key, val;
+  do {
+    std::getline(ifs, line);
+    std::istringstream iss(line);
+    std::getline(iss, key, ' ');
+    std::getline(iss, val, ' ');
+  } while (key != target_key);
+  ifs.close();
+  return val;
+}
 // DONE: An example of how to read data from the filesystem
 string LinuxParser::OperatingSystem() {
   string line;
@@ -168,7 +182,9 @@ vector<long long> LinuxParser::CpuUtilization() {
 int LinuxParser::TotalProcesses() { return 0; }
 
 // TODO: Read and return the number of running processes
-int LinuxParser::RunningProcesses() { return 0; }
+int LinuxParser::RunningProcesses() {
+  return std::stoi(ProcStat("procs_running"));
+}
 
 // DONE: Read and return the command associated with a process
 string LinuxParser::Command(int pid) {
