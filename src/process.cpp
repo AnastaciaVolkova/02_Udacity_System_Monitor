@@ -1,8 +1,9 @@
 #include <unistd.h>
 #include <cctype>
 #include <fstream>
-#include <iostream>
+#include <iomanip>
 #include <iterator>
+#include <regex>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -13,6 +14,8 @@ using std::ifstream;
 using std::istream_iterator;
 using std::istringstream;
 using std::ostringstream;
+using std::regex;
+using std::smatch;
 using std::stol;
 using std::string;
 using std::to_string;
@@ -82,8 +85,25 @@ string Process::Command() {
   return line;
 }
 
-// TODO: Return this process's memory utilization
-string Process::Ram() { return string(); }
+#include <iostream>
+// DONE: Return this process's memory utilization
+string Process::Ram() {
+  ifstream ifs(string("/proc/") + to_string(id_) + string("/status"));
+  string key = "", val = "", line;
+  regex pat("([a-z,A-Z]+):[\t, ]+([0-9]+).+");
+  smatch sm;
+  getline(ifs, line);
+  do {
+    if (regex_match(line, sm, pat)) {
+      key = sm[1].str();
+      val = sm[2].str();
+    }
+  } while (getline(ifs, line) && (key != "VmSize"));
+  float v = stol(val) / 1024.0;
+  ostringstream oss;
+  oss << std::fixed << std::setprecision(3) << v;
+  return oss.str();
+}
 
 // TODO: Return the user (name) that generated this process
 string Process::User() { return string(); }
