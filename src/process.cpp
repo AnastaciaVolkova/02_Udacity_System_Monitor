@@ -64,10 +64,12 @@ float Process::CpuUtilization() {
   // Find how much system works.
   float seconds = uptime - starttime;
 
+  // Compute process utilization and add to sum.
   cpu_usage_sum_ += (total_time / seconds);
 
   util_calls_num_++;
 
+  // Return average of utilization.
   return cpu_usage_sum_ / util_calls_num_;
 }
 
