@@ -1,3 +1,4 @@
+#include <dirent.h>
 #include <unistd.h>
 #include <cmath>
 #include <cstddef>
@@ -14,8 +15,10 @@
 #include "system.h"
 
 using namespace std;
+using std::regex;
 using std::set;
 using std::size_t;
+using std::smatch;
 using std::string;
 using std::vector;
 
@@ -23,7 +26,20 @@ using std::vector;
 Processor& System::Cpu() { return cpu_; }
 
 // TODO: Return a container composed of the system's processes
-vector<Process>& System::Processes() { return processes_; }
+vector<Process>& System::Processes() {
+  DIR* dirp = opendir("/proc/");
+  struct dirent* dp;
+
+  std::regex pat("[0-9]+");
+  std::smatch sm;
+
+  while ((dp = readdir(dirp)) != NULL) {
+    string s(dp->d_name);
+    if (std::regex_match(s, sm, pat))
+      processes_.push_back(Process(std::stoi(string(sm[0].str()))));
+  }
+  return processes_;
+}
 
 // DONE: Return the system's kernel identifier (string)
 std::string System::Kernel() {
