@@ -77,26 +77,11 @@ std::string System::OperatingSystem() {
   return val;
 }
 
-int System::ReadProcStat(string target_key) {
-  string line;
-  ifstream ifs("/proc/stat");
-  // Search for "procs_running".
-  string key, val;
-  do {
-    getline(ifs, line);
-    istringstream iss(line);
-    getline(iss, key, ' ');
-    getline(iss, val, ' ');
-  } while (key != target_key);
-  ifs.close();
-  return stoi(val);
-}
-
 // DONE: Return the number of processes actively running on the system
 int System::RunningProcesses() { return LinuxParser::RunningProcesses(); }
 
 // DONE: Return the total number of processes on the system
-int System::TotalProcesses() { return ReadProcStat("processes"); }
+int System::TotalProcesses() { return LinuxParser::TotalProcesses(); }
 
 // DONE: Return the number of seconds since the system started running
 long int System::UpTime() { return LinuxParser::UpTime(); }

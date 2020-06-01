@@ -22,7 +22,6 @@ class System {
  private:
   Processor cpu_ = {};
   std::vector<Process> processes_ = {};
-  int ReadProcStat(std::string target_key);
 };
 
 #endif

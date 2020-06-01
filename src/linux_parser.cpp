@@ -178,8 +178,8 @@ vector<long long> LinuxParser::CpuUtilization() {
   return vector<long long>{idle, non_idle};
 }
 
-// TODO: Read and return the total number of processes
-int LinuxParser::TotalProcesses() { return 0; }
+// DONE: Read and return the total number of processes
+int LinuxParser::TotalProcesses() { return std::stoi(ProcStat("processes")); }
 
 // DONE: Read and return the number of running processes
 int LinuxParser::RunningProcesses() {

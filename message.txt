@@ -1,4 +1,4 @@
-feat: Realize LinuxParser::RunningProcesses
+feat: Realize LinuxParser::TotalProcesses
 
-Create method LinuxParser::ProcStat for reading /proc/stat
+Remove unused method System::ReadProcStat
 
