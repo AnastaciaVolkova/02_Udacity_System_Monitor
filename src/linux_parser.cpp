@@ -121,7 +121,7 @@ long LinuxParser::UpTime() {
 }
 
 // DONE: Read and return the number of jiffies for the system
-long LinuxParser::Jiffies() { return sysconf(_SC_CLK_TCK); }
+long LinuxParser::Jiffies() { return 0; }
 
 // TODO: Read and return the number of active jiffies for a PID
 // REMOVE: [[maybe_unused]] once you define the function
@@ -187,7 +187,7 @@ string LinuxParser::User(int pid) {
 // DONE: Read and return the uptime of a process
 long LinuxParser::UpTime(int pid) {
   // Get number of clock ticks per second.
-  float herz = static_cast<float>(Jiffies());
+  float herz = static_cast<float>(sysconf(_SC_CLK_TCK));
 
   // Get starttime field from /proc/[id]/stat.
   string line;

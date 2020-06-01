@@ -34,7 +34,7 @@ enum class ProcIdStat : int {
 // DONE: Return this process's CPU utilization
 float Process::CpuUtilization() {
   // Get number of clock ticks per second.
-  float herz = static_cast<float>(LinuxParser::Jiffies());
+  float herz = static_cast<float>(sysconf(_SC_CLK_TCK));
 
   // Read fields of /proc/[pid]/stat.
   ifstream ifs(string("/proc/") + to_string(id_) + string("/stat"));
