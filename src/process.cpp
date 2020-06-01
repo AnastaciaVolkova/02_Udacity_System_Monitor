@@ -76,9 +76,10 @@ float Process::CpuUtilization() {
 
   float uptime = static_cast<float>(stol(line));  // Uptime of system (seconds).
 
-  // Find out when process starts after system boots.
-  float starttime =
-      static_cast<float>(stol(tokens[static_cast<int>(ProcIdStat::starttime)]));
+  // Find out when process starts after system boots (seconds).
+  float starttime = static_cast<float>(
+                        stol(tokens[static_cast<int>(ProcIdStat::starttime)])) /
+                    herz;
 
   // Find how much system works.
   float seconds = uptime - starttime;
