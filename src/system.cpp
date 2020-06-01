@@ -1,4 +1,5 @@
 #include <unistd.h>
+#include <cmath>
 #include <cstddef>
 #include <fstream>
 #include <iterator>
@@ -96,5 +97,13 @@ int System::RunningProcesses() { return ReadProcStat("procs_running"); }
 // DONE: Return the total number of processes on the system
 int System::TotalProcesses() { return ReadProcStat("processes"); }
 
-// TODO: Return the number of seconds since the system started running
-long int System::UpTime() { return 0; }
+// DONE: Return the number of seconds since the system started running
+long int System::UpTime() {
+  ifstream ifs("/proc/uptime");
+  string line;
+  // Get uptime.
+  getline(ifs, line, ' ');
+  float x = floor(stof(line));
+  ifs.close();
+  return static_cast<long int>(x);
+}
