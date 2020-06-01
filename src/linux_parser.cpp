@@ -151,7 +151,6 @@ string LinuxParser::Command(int pid) {
   return line;
 }
 
-// DONE: Read and return the memory used by a process
 string LinuxParser::Ram(int pid) {
   string val = ProcStatus(pid, "VmSize");
   float v = stol(val) / 1024.0;
