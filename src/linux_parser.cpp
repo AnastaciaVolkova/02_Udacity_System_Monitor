@@ -136,9 +136,27 @@ string LinuxParser::Ram(int pid) {
 // REMOVE: [[maybe_unused]] once you define the function
 string LinuxParser::Uid(int pid[[maybe_unused]]) { return string(); }
 
-// TODO: Read and return the user associated with a process
-// REMOVE: [[maybe_unused]] once you define the function
-string LinuxParser::User(int pid[[maybe_unused]]) { return string(); }
+// DONE: Read and return the user associated with a process
+string LinuxParser::User(int pid) {
+  // Read user id from /proc/[id]/status
+  long long target_uid = std::stol(ProcStatus(pid, "Uid"));
+  std::ifstream ifs("/etc/passwd");
+  long long uid = 0;
+  string line, name;
+  getline(ifs, line);
+  // Read line by line until target uid is found.
+  do {
+    string x;
+    std::stringstream iss(line);
+    std::getline(iss, name, ':');  // Read and safe user name.
+    std::getline(iss, x, ':');     // Read password.
+    std::getline(iss, x, ':');     // Read user id.
+    uid = stol(x);
+
+  } while ((uid == target_uid) && getline(ifs, line));
+  ifs.close();
+  return name;
+}
 
 // TODO: Read and return the uptime of a process
 // REMOVE: [[maybe_unused]] once you define the function
