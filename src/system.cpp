@@ -75,8 +75,7 @@ std::string System::OperatingSystem() {
   return val;
 }
 
-// DONE: Return the number of processes actively running on the system
-int System::RunningProcesses() {
+int System::ReadProcStat(string target_key) {
   string line;
   ifstream ifs("/proc/stat");
   // Search for "procs_running".
@@ -86,13 +85,16 @@ int System::RunningProcesses() {
     istringstream iss(line);
     getline(iss, key, ' ');
     getline(iss, val, ' ');
-  } while (key != "procs_running");
+  } while (key != target_key);
   ifs.close();
   return stoi(val);
 }
 
-// TODO: Return the total number of processes on the system
-int System::TotalProcesses() { return 0; }
+// DONE: Return the number of processes actively running on the system
+int System::RunningProcesses() { return ReadProcStat("procs_running"); }
+
+// DONE: Return the total number of processes on the system
+int System::TotalProcesses() { return ReadProcStat("processes"); }
 
 // TODO: Return the number of seconds since the system started running
 long int System::UpTime() { return 0; }
