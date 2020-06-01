@@ -87,7 +87,7 @@ vector<int> LinuxParser::Pids() {
   return pids;
 }
 
-// TODO: Read and return the system memory utilization
+// DONE: Read and return the system memory utilization
 float LinuxParser::MemoryUtilization() {
   std::ifstream ifs("/proc/meminfo");
   std::string line;
