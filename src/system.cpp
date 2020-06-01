@@ -75,8 +75,21 @@ std::string System::OperatingSystem() {
   return val;
 }
 
-// TODO: Return the number of processes actively running on the system
-int System::RunningProcesses() { return 0; }
+// DONE: Return the number of processes actively running on the system
+int System::RunningProcesses() {
+  string line;
+  ifstream ifs("/proc/stat");
+  // Search for "procs_running".
+  string key, val;
+  do {
+    getline(ifs, line);
+    istringstream iss(line);
+    getline(iss, key, ' ');
+    getline(iss, val, ' ');
+  } while (key != "procs_running");
+  ifs.close();
+  return stoi(val);
+}
 
 // TODO: Return the total number of processes on the system
 int System::TotalProcesses() { return 0; }
