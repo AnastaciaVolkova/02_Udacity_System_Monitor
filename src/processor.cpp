@@ -6,6 +6,7 @@
 #include <string>
 #include <thread>
 #include <vector>
+#include "linux_parser.h"
 #include "processor.h"
 
 using namespace std;
@@ -25,52 +26,30 @@ enum class FieldsNames : int {
 
 // DONE: Return the aggregate CPU utilization
 float Processor::Utilization() {
-  float idle = 0, non_idle = 0;
-  for (int i = 0; i < window_size; i++) {
-    ifstream ifs("/proc/stat");
-    string line;
-    // Read the line which aggregates the numbers in all of the other "cpuN"
-    // lines .
-    getline(ifs, line);
-    ifs.close();
-    stringstream sst(line);
+  /*PrevIdle = previdle + previowait
+  Idle = idle + iowait
 
-    // Get line with numbers.
-    getline(sst, line, ' ');
-    getline(sst, line);
-    istringstream iss(line);
+  PrevNonIdle = prevuser + prevnice + prevsystem + previrq + prevsoftirq +
+  prevsteal NonIdle = user + nice + system + irq + softirq + steal
 
-    // Store kernel activity numbers.
-    vector<float> activity_numbers(istream_iterator<float>{iss},
-                                   istream_iterator<float>());
+  PrevTotal = PrevIdle + PrevNonIdle
+  Total = Idle + NonIdle
 
-    // Calculate CPU usage.
-    /*
-    PrevIdle = previdle + previowait
-    Idle = idle + iowait
+  # differentiate: actual value minus the previous one
+  totald = Total - PrevTotal
+  idled = Idle - PrevIdle
 
-    PrevNonIdle = prevuser + prevnice + prevsystem + previrq + prevsoftirq +
-    prevsteal NonIdle = user + nice + system + irq + softirq + steal
+  CPU_Percentage = (totald - idled)/totald
+  */
+  float idle_prev = idle_;
+  float total_prev = total_;
 
-    PrevTotal = PrevIdle + PrevNonIdle
-    Total = Idle + NonIdle
+  vector<long long> x = LinuxParser::CpuUtilization();
+  idle_ = static_cast<float>(x[0]);
+  total_ = idle_ + static_cast<float>(x[1]);
 
-    # differentiate: actual value minus the previous one
-    totald = Total - PrevTotal
-    idled = Idle - PrevIdle
-    */
-    idle += activity_numbers[static_cast<int>(FieldsNames::idle)] +
-            activity_numbers[static_cast<int>(FieldsNames::iowait)];
-    non_idle += activity_numbers[static_cast<int>(FieldsNames::user)] +
-                activity_numbers[static_cast<int>(FieldsNames::nice)] +
-                activity_numbers[static_cast<int>(FieldsNames::system)] +
-                activity_numbers[static_cast<int>(FieldsNames::irq)] +
-                activity_numbers[static_cast<int>(FieldsNames::softirq)] +
-                activity_numbers[static_cast<int>(FieldsNames::steal)];
-    this_thread::sleep_for(chrono::milliseconds(1));
-  }
-  // Get average of CPU usage parameters.
-  idle /= window_size;
-  non_idle /= window_size;
-  return non_idle / (idle + non_idle);
-}
+  float totald = total_ - total_prev;
+  float idled = idle_ - idle_prev;
+  float d = (totald - idled) / totald;
+  return d;
+};

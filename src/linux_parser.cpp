@@ -120,21 +120,49 @@ long LinuxParser::UpTime() {
   return static_cast<long int>(x);
 }
 
-// DONE: Read and return the number of jiffies for the system
+// NOTDONE: Read and return the number of jiffies for the system
 long LinuxParser::Jiffies() { return 0; }
 
-// TODO: Read and return the number of active jiffies for a PID
+// NOTDONE: Read and return the number of active jiffies for a PID
 // REMOVE: [[maybe_unused]] once you define the function
 long LinuxParser::ActiveJiffies(int pid[[maybe_unused]]) { return 0; }
 
-// TODO: Read and return the number of active jiffies for the system
+// NOTDONE: Read and return the number of active jiffies for the system
 long LinuxParser::ActiveJiffies() { return 0; }
 
-// TODO: Read and return the number of idle jiffies for the system
+// NOTDONE: Read and return the number of idle jiffies for the system
 long LinuxParser::IdleJiffies() { return 0; }
 
 // TODO: Read and return CPU utilization
-float CpuUtilization() { return 0.0; }
+vector<long long> LinuxParser::CpuUtilization() {
+  std::ifstream ifs(kProcDirectory + kStatFilename);
+  string line;
+  // Read the line which aggregates the numbers in all of the other "cpuN"
+  // lines .
+  getline(ifs, line);
+  ifs.close();
+  std::stringstream sst(line);
+
+  // Get line with numbers.
+  std::getline(sst, line, ' ');
+  std::getline(sst, line);
+  std::istringstream iss(line);
+
+  // Store kernel activity numbers.
+  vector<float> activity_numbers(std::istream_iterator<float>{iss},
+                                 std::istream_iterator<float>());
+
+  // Calculate CPU usage.
+  // Idle = idle + iowait
+  // NonIdle = user + nice + system + irq + softirq + steal
+
+  long long idle = activity_numbers[kIdle_] + activity_numbers[kIOwait_];
+  long long non_idle = activity_numbers[kUser_] + activity_numbers[kNice_] +
+                       activity_numbers[kSystem_] + activity_numbers[kIRQ_] +
+                       activity_numbers[kSoftIRQ_] + activity_numbers[kSteal_];
+
+  return vector<long long>{idle, non_idle};
+}
 
 // TODO: Read and return the total number of processes
 int LinuxParser::TotalProcesses() { return 0; }

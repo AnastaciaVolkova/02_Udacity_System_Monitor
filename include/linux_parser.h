@@ -53,7 +53,7 @@ enum class ProcIdStat : int {
 };
 
 float MemoryUtilazation();
-float CpuUtilization();
+std::vector<long long> CpuUtilization();
 long Jiffies();
 long ActiveJiffies();
 long ActiveJiffies(int pid);

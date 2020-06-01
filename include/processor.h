@@ -4,10 +4,8 @@
 class Processor {
  public:
   float Utilization();  // DONE: See src/processor.cpp
-
-  // DONE: Declare any necessary private members
  private:
-  int window_size = 2;  // Size of window to average.
+  float total_ = 0, idle_ = 0;
 };
 
 #endif
