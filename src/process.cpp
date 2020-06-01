@@ -111,8 +111,27 @@ string Process::Ram() {
   return oss.str();
 }
 
-// TODO: Return the user (name) that generated this process
-string Process::User() { return string(); }
+// DONE: Return the user (name) that generated this process
+string Process::User() {
+  // Read user id from /proc/[id]/status
+  long long target_uid = stol(ReadProcStatus("Uid"));
+  ifstream ifs("/etc/passwd");
+  long long uid = 0;
+  string line, name;
+  getline(ifs, line);
+  // Read line by line until target uid is found.
+  do {
+    string x;
+    istringstream iss(line);
+    getline(iss, name, ':');  // Read and safe user name.
+    getline(iss, x, ':');     // Read password.
+    getline(iss, x, ':');     // Read user id.
+    uid = stol(x);
+
+  } while ((uid == target_uid) && getline(ifs, line));
+  ifs.close();
+  return name;
+}
 
 // TODO: Return the age of this process (in seconds)
 long int Process::UpTime() { return 0; }
