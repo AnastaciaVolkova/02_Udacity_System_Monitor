@@ -150,15 +150,14 @@ string LinuxParser::Ram(int pid) {
   return oss.str();
 }
 
-// TODO: Read and return the user ID associated with a process
-// REMOVE: [[maybe_unused]] once you define the function
-string LinuxParser::Uid(int pid[[maybe_unused]]) { return string(); }
+// DONE: Read and return the user ID associated with a process
+string LinuxParser::Uid(int pid) { return ProcStatus(pid, "Uid"); }
 
 // DONE: Read and return the user associated with a process
 string LinuxParser::User(int pid) {
   // Read user id from /proc/[id]/status
-  long long target_uid = std::stol(ProcStatus(pid, "Uid"));
-  std::ifstream ifs("/etc/passwd");
+  long long target_uid = std::stol(Uid(pid));
+  std::ifstream ifs(kPasswordPath);
   long long uid = 0;
   string line, name;
   getline(ifs, line);
