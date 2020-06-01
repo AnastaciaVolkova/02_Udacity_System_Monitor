@@ -10,6 +10,7 @@
 #include <string>
 #include <vector>
 
+#include "linux_parser.h"
 #include "process.h"
 #include "processor.h"
 #include "system.h"
@@ -55,23 +56,7 @@ std::string System::Kernel() {
 }
 
 // DONE: Return the system's memory utilization
-float System::MemoryUtilization() {
-  ifstream ifs("/proc/meminfo");
-  string line;
-  float mem_total, mem_free;
-  regex rx("(^[a-z,A-Z]+): +([0-9]+)");
-  for (int i = 0; i < 2; i++) {
-    getline(ifs, line);
-    smatch sm;
-    regex_search(line, sm, rx);
-    string key = sm.str(1);
-    string value = sm.str(2);
-    if (key == "MemTotal") mem_total = stof(value);
-    if (key == "MemFree") mem_free = stof(value);
-  }
-  ifs.close();
-  return mem_total - mem_free;
-}
+float System::MemoryUtilization() { return LinuxParser::MemoryUtilization(); }
 
 // DONE: Return the operating system name
 std::string System::OperatingSystem() {
