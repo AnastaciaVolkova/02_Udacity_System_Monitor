@@ -11,8 +11,8 @@ class Process {
   Process(int id) : id_(id){};
 
   int Pid();
-  std::string User();     // TODO: See src/process.cpp
-  std::string Command();  // TODO: See src/process.cpp
+  std::string User();  // TODO: See src/process.cpp
+  std::string Command();
   float CpuUtilization();
   std::string Ram();                       // TODO: See src/process.cpp
   long int UpTime();                       // TODO: See src/process.cpp

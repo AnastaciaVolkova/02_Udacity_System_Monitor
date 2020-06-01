@@ -73,8 +73,14 @@ float Process::CpuUtilization() {
   return cpu_usage_sum_ / util_calls_num_;
 }
 
-// TODO: Return the command that generated this process
-string Process::Command() { return string(); }
+// DONE : Return the command that generated this process
+string Process::Command() {
+  // Read fields of /proc/[pid]/cmdline.
+  ifstream ifs(string("/proc/") + to_string(id_) + string("/cmdline"));
+  string line;
+  getline(ifs, line);
+  return line;
+}
 
 // TODO: Return this process's memory utilization
 string Process::Ram() { return string(); }
