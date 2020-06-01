@@ -11,9 +11,9 @@ class Process {
   Process(int id) : id_(id){};
 
   int Pid();
-  std::string User();                      // TODO: See src/process.cpp
-  std::string Command();                   // TODO: See src/process.cpp
-  float CpuUtilization();                  // TODO: See src/process.cpp
+  std::string User();     // TODO: See src/process.cpp
+  std::string Command();  // TODO: See src/process.cpp
+  float CpuUtilization();
   std::string Ram();                       // TODO: See src/process.cpp
   long int UpTime();                       // TODO: See src/process.cpp
   bool operator<(Process const& a) const;  // TODO: See src/process.cpp
@@ -21,6 +21,8 @@ class Process {
   // TODO: Declare any necessary private members
  private:
   int id_;
+  float cpu_usage_sum_ = 0;  // Processor utilization sum.
+  int util_calls_num_ = 0;   // Number of CpuUtilization calls.
 };
 
 #endif
