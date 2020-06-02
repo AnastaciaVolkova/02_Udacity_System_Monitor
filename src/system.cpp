@@ -30,6 +30,7 @@ Processor& System::Cpu() { return cpu_; }
 vector<Process>& System::Processes() {
   vector<int> pids = LinuxParser::Pids();
   for (auto p : pids) processes_.push_back(Process(p));
+  std::sort(processes_.begin(), processes_.end());
   return processes_;
 }
 

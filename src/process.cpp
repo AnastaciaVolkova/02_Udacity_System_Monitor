@@ -31,6 +31,9 @@ enum class ProcIdStat : int {
   starttime = 23
 };
 
+// Initialize Processs with cpu utilizaton.
+Process::Process(int id) : id_(id) { CpuUtilization(); }
+
 // DONE: Return this process's CPU utilization
 float Process::CpuUtilization() {
   // Get number of clock ticks per second.
@@ -91,5 +94,6 @@ long int Process::UpTime() { return LinuxParser::UpTime(id_); }
 
 // DONE: Overload the "less than" comparison operator for Process objects
 bool Process::operator<(Process const& a) const {
-  return cpu_usage_sum_ > a.cpu_usage_sum_;
+  return (static_cast<float>(cpu_usage_sum_) / util_calls_num_) >
+         (static_cast<float>(a.cpu_usage_sum_) / a.util_calls_num_);
 }
