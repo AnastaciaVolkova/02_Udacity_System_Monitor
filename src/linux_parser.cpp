@@ -282,10 +282,7 @@ long LinuxParser::UpTime(int pid) {
                         std::istream_iterator<string>());
 
   // Get uptime of the system from /proc/uptime.
-  ifs.open(kProcDirectory + kUptimeFilename);
-  getline(ifs, line, ' ');
-  ifs.close();
-  float uptime = static_cast<float>(stol(line));  // Uptime of system (seconds).
+  float uptime = static_cast<float>(UpTime());  // Uptime of system (seconds).
 
   // Find out when process starts after system boots (seconds).
   float starttime = static_cast<float>(std::stol(
