@@ -178,6 +178,45 @@ vector<long long> LinuxParser::CpuUtilization() {
   return vector<long long>{idle, non_idle};
 }
 
+std::vector<float> LinuxParser::CpuUtilization(int pid) {
+  // Get number of clock ticks per second.
+  float herz = static_cast<float>(sysconf(_SC_CLK_TCK));
+
+  // Read fields of /proc/[pid]/stat.
+  std::ifstream ifs(kProcDirectory + to_string(pid) + kStatFilename);
+  std::ostringstream oss;
+  oss << ifs.rdbuf();
+  ifs.close();
+  std::istringstream iss(oss.str());
+  vector<string> tokens(std::istream_iterator<string>{iss},
+                        std::istream_iterator<std::string>());
+
+  // Total time of process (seconds).
+  float total_time = (stof(tokens[static_cast<int>(ProcIdStat::utime)]) +
+                      stof(tokens[static_cast<int>(ProcIdStat::stime)]) +
+                      stof(tokens[static_cast<int>(ProcIdStat::cutime)]) +
+                      stof(tokens[static_cast<int>(ProcIdStat::cstime)])) /
+                     herz;
+
+  // Get uptime of the system.
+  ifs.open(kProcDirectory + kUptimeFilename);
+  string line;
+  getline(ifs, line, ' ');
+  ifs.close();
+
+  float uptime = static_cast<float>(stol(line));  // Uptime of system (seconds).
+
+  // Find out when process starts after system boots (seconds).
+  float starttime = static_cast<float>(
+                        stol(tokens[static_cast<int>(ProcIdStat::starttime)])) /
+                    herz;
+
+  // Find how long ago process starts.
+  float seconds = uptime - starttime;
+
+  return vector<float>{total_time, seconds};
+}
+
 // DONE: Read and return the total number of processes
 int LinuxParser::TotalProcesses() { return std::stoi(ProcStat("processes")); }
 
