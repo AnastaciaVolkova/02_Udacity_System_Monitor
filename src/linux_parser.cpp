@@ -238,7 +238,7 @@ string LinuxParser::Ram(int pid) {
   string val = ProcStatus(pid, "VmSize");
   float v = stol(val) / 1024.0;
   std::ostringstream oss;
-  oss << std::fixed << std::setprecision(3) << v;
+  oss << std::setw(8) << v;
   return oss.str();
 }
 
