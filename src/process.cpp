@@ -23,14 +23,6 @@ using std::vector;
 
 int Process::Pid() { return id_; }
 
-enum class ProcIdStat : int {
-  utime = 13,
-  stime,
-  cutime,
-  cstime,
-  starttime = 23
-};
-
 // Initialize Processs with cpu utilizaton.
 Process::Process(int id) : id_(id) { CpuUtilization(); }
 
