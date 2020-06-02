@@ -52,7 +52,7 @@ enum class ProcIdStat : int {
   stime,
   cutime,
   cstime,
-  starttime = 23
+  starttime = 21
 };
 
 float MemoryUtilazation();
