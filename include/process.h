@@ -20,8 +20,7 @@ class Process {
 
  private:
   int id_;
-  float cpu_usage_sum_ = 0;  // Processor utilization sum.
-  int util_calls_num_ = 0;   // Number of CpuUtilization calls.
+  float cpu_usage_ = 0.0f;
 };
 
 #endif

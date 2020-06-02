@@ -33,12 +33,9 @@ float Process::CpuUtilization() {
   float total_time = x[0];
   float seconds = x[1];
   // Compute process utilization and add to sum.
-  cpu_usage_sum_ += (total_time / seconds);
+  cpu_usage_ = (total_time / seconds);
 
-  util_calls_num_++;
-
-  // Return average of utilization.
-  return cpu_usage_sum_ / util_calls_num_;
+  return cpu_usage_;
 }
 
 // DONE : Return the command that generated this process
@@ -55,6 +52,5 @@ long int Process::UpTime() { return LinuxParser::UpTime(id_); }
 
 // DONE: Overload the "less than" comparison operator for Process objects
 bool Process::operator<(Process const& a) const {
-  return (static_cast<float>(cpu_usage_sum_) / util_calls_num_) >
-         (static_cast<float>(a.cpu_usage_sum_) / a.util_calls_num_);
+  return cpu_usage_ > a.cpu_usage_;
 }
